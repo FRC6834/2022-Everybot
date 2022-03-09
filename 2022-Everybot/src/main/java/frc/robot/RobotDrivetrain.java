@@ -20,10 +20,10 @@ public class RobotDrivetrain {
   //Orientation assumes killswitch is at front of robot
   //The first parameter refers to the CAN ID - Use Rev Tool to determine CAN IDs
   //MotorType.kBrushless MUST be used when using NEO brushless motors
-  private CANSparkMax leftFront = new CANSparkMax(1, MotorType.kBrushless);
-  private CANSparkMax leftRear = new CANSparkMax(2, MotorType.kBrushless);
-  private CANSparkMax rightFront = new CANSparkMax(3, MotorType.kBrushless);
-  private CANSparkMax rightRear = new CANSparkMax(4, MotorType.kBrushless);
+  private CANSparkMax leftFront = new CANSparkMax(2, MotorType.kBrushless);
+  private CANSparkMax leftRear = new CANSparkMax(1, MotorType.kBrushless);
+  private CANSparkMax rightFront = new CANSparkMax(4, MotorType.kBrushless);
+  private CANSparkMax rightRear = new CANSparkMax(3, MotorType.kBrushless);
   
   
   //Groups left side speed controllers together and right side speed controllers together
@@ -75,16 +75,16 @@ public class RobotDrivetrain {
   */
   public void dPadGetter(int dPad){
     if (dPad==0){
-      robotDrive.arcadeDrive(0.5, 0); //forward
+      robotDrive.tankDrive(0.5, 0.5); //forward
     }
     if (dPad==90){
-      robotDrive.arcadeDrive(0, 0.5); //right
+      robotDrive.tankDrive(0.5, -0.5); //right
     }
     if (dPad==180){
-      robotDrive.arcadeDrive(-0.5, 0); //reverse
+      robotDrive.tankDrive(-0.5, -0.5); //reverse
     }
     if (dPad==270){
-      robotDrive.arcadeDrive(0, -0.5); //left
+      robotDrive.tankDrive(-0.5, 0.5); //left
     }
   }
   //This method should reset the built-in encoders on the SPARK MAX speed controllers to 0
