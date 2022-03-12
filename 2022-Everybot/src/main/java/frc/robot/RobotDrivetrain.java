@@ -72,16 +72,16 @@ public class RobotDrivetrain {
   */
   public void dPadGetter(int dPad){
     if (dPad==0){
-      robotDrive.tankDrive(0.3, 0.3); //forward
+      robotDrive.tankDrive(0.2, 0.2); //forward
     }
     if (dPad==90){
-      robotDrive.tankDrive(0.3, -0.3); //right
+      robotDrive.tankDrive(0.2, -0.2); //right
     }
     if (dPad==180){
-      robotDrive.tankDrive(-0.3, -0.3); //reverse
+      robotDrive.tankDrive(-0.2, -0.2); //reverse
     }
     if (dPad==270){
-      robotDrive.tankDrive(-0.3, 0.3); //left
+      robotDrive.tankDrive(-0.2, 0.2); //left
     }
   }
   //This method should reset the built-in encoders on the SPARK MAX speed controllers to 0

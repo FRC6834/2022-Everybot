@@ -18,6 +18,8 @@ import edu.wpi.first.util.sendable.SendableRegistry; //allows us to add info we 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import edu.wpi.first.cameraserver.CameraServer;
+
 
 
 public class Robot extends TimedRobot { 
@@ -31,12 +33,13 @@ public class Robot extends TimedRobot {
   //The sub object and dot operators will be called upon when accessing Subsystem methods
   //private Subsystem sub = new Subsystem();
   private CANSparkMax everyBotIntakeMotor = new CANSparkMax(9, MotorType.kBrushed);
-  private CANSparkMax everyBotArmMotor = new CANSparkMax(12, MotorType.kBrushed); 
+  private CANSparkMax everyBotArmMotor = new CANSparkMax(12, MotorType.kBrushless); 
    
   @Override
   public void robotInit() {    //This method only runs once when the code first starts
     //Sets encoder positions to 0
     drivetrain.resetEncoders();
+    CameraServer.startAutomaticCapture();
   }
 
   @Override
@@ -76,7 +79,9 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+    everyBotArmMotor.setIdleMode(IdleMode.kBrake);
+  }
   
   @Override
   public void teleopPeriodic() {
@@ -94,10 +99,10 @@ public class Robot extends TimedRobot {
     double rSpeed = controller0.getLeftTriggerAxis(); //reverse speed from left trigger
     double turn = controller0.getLeftX(); //gets the direction from the left analog stick
     if (fSpeed > 0){
-      drivetrain.curvatureDrive(fSpeed, turn); // if quickTurn doesn't work, change to false
+      drivetrain.curvatureDrive(fSpeed*.8, turn); // if quickTurn doesn't work, change to false
     }
     else if (rSpeed > 0){
-      drivetrain.curvatureDrive(-1*rSpeed, turn);
+      drivetrain.curvatureDrive(-1*rSpeed*.8, turn);
     }
         
     int dPad = controller0.getPOV(); //scans to see which directional arrow is being pushed
@@ -106,12 +111,16 @@ public class Robot extends TimedRobot {
     //Arm
     boolean armUp = controller0.getXButton();
     boolean armDown = controller0.getYButton();
+    boolean brake = controller0.getRightBumper();
     //sub.everyBotArm(armUp, armDown);
     if(armUp){
-      everyBotArmMotor.set(-0.2);
+      everyBotArmMotor.set(0.15);
     }
     else if(armDown){
-      everyBotArmMotor.set(0.2);
+      everyBotArmMotor.set(-0.1);
+    }
+    else if(brake){
+      everyBotArmMotor.setIdleMode(IdleMode.kBrake);
     }
     else{
       everyBotArmMotor.set(0);
