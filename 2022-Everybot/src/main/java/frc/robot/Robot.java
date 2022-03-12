@@ -15,6 +15,9 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser; //not sure what this is for - EG
 import edu.wpi.first.wpilibj.XboxController; //improved functionality for xbox controller use
 import edu.wpi.first.util.sendable.SendableRegistry; //allows us to add info we select to dashboard
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 
 public class Robot extends TimedRobot { 
@@ -26,7 +29,9 @@ public class Robot extends TimedRobot {
   //The drivetrain object and dot operators will be called upon when accessing RobotDrivetrain methods
   private RobotDrivetrain drivetrain = new RobotDrivetrain();
   //The sub object and dot operators will be called upon when accessing Subsystem methods
-  private Subsystem sub = new Subsystem();
+  //private Subsystem sub = new Subsystem();
+  private CANSparkMax everyBotIntakeMotor = new CANSparkMax(9, MotorType.kBrushed);
+  private CANSparkMax everyBotArmMotor = new CANSparkMax(12, MotorType.kBrushed); 
    
   @Override
   public void robotInit() {    //This method only runs once when the code first starts
@@ -101,12 +106,32 @@ public class Robot extends TimedRobot {
     //Arm
     boolean armUp = controller0.getXButton();
     boolean armDown = controller0.getYButton();
-    sub.everyBotArm(armUp, armDown);
+    //sub.everyBotArm(armUp, armDown);
+    if(armUp){
+      everyBotArmMotor.set(-0.2);
+    }
+    else if(armDown){
+      everyBotArmMotor.set(0.2);
+    }
+    else{
+      everyBotArmMotor.set(0);
+    }
 
     //Intake
     boolean intakeIn = controller0.getAButton();
     boolean intakeOut = controller0.getBButton();
-    sub.everyBotArm(intakeIn, intakeOut);
+    //sub.everyBotArm(intakeIn, intakeOut);
+    if(intakeIn){
+      everyBotIntakeMotor.set(-0.5);
+    }
+    else if(intakeOut){
+      everyBotIntakeMotor.set(0.9);
+    }
+    else{
+      everyBotIntakeMotor.set(0);
+    }
+
+    
   }
   
 

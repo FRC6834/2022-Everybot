@@ -2,6 +2,7 @@ package frc.robot;
 
 //Imports
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 //Subsystem class is general - specific methods for each subsystem
@@ -17,10 +18,10 @@ public class Subsystem {
     //Code for everyBot intake
     public void everyBotIntake(boolean in, boolean out){
         if(in){
-            everyBotIntakeMotor.set(0.5);
+            everyBotIntakeMotor.set(0.6);
         }
         else if(out){
-            everyBotIntakeMotor.set(-0.5);
+            everyBotIntakeMotor.set(-0.6);
         }
         else{
             everyBotIntakeMotor.set(0);
@@ -29,10 +30,10 @@ public class Subsystem {
     //Code for everyBot arm
     public void everyBotArm(boolean up, boolean down){
         if(up){
-            everyBotArmMotor.set(0.1);
+            everyBotArmMotor.set(0.4);
         }
         else if(down){
-            everyBotArmMotor.set(-0.1);
+            everyBotArmMotor.set(-0.4);
         }
         else{
             everyBotArmMotor.set(0);
