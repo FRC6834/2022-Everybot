@@ -2,7 +2,7 @@ package frc.robot;
 
 //Imports
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup; //Replaces SpeedControllerGroup - EG 1.14.22
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 /*Must install rev robotics library in order to use SPARK Max speed controllers. 
  *Follow directions on site below.
  *https://docs.revrobotics.com/sparkmax/software-resources/spark-max-api-information#java-api
@@ -20,11 +20,11 @@ public class RobotDrivetrain {
   //Orientation assumes killswitch is at front of robot
   //The first parameter refers to the CAN ID - Use Rev Tool to determine CAN IDs
   //MotorType.kBrushless MUST be used when using NEO brushless motors
+  //Use REV Tool to ensure motor controllers are flashed for brushless
   private CANSparkMax leftFront = new CANSparkMax(2, MotorType.kBrushless);
   private CANSparkMax leftRear = new CANSparkMax(1, MotorType.kBrushless);
   private CANSparkMax rightFront = new CANSparkMax(4, MotorType.kBrushless);
   private CANSparkMax rightRear = new CANSparkMax(3, MotorType.kBrushless);
-  
   
   //Groups left side speed controllers together and right side speed controllers together
   //This is cleaner than setting up two different differential drives
@@ -45,7 +45,6 @@ public class RobotDrivetrain {
     robotDrive.arcadeDrive(xSpeed, zRotation);
   }
 
-  //Method for tank drive - not currently used
   //leftSpeed (-1.0 to 1.0) - comes from left stick
   //rightSpeed (-1.0 to 1.0) - comes from right stick
   public void tankDrive(double leftSpeed, double rightSpeed){
@@ -56,11 +55,10 @@ public class RobotDrivetrain {
   //Right side motor controllers are inverted to ensure that both sides of the bot move in the same direction when desired
   //xSpeed (0 to 1.0) to go forward and (-1.0 to 0) to move backward
   //zRotation (-1.0 to 1.0) controls direction
-  //isQuickTurn (fix me) - needs tested - change to false to remove
-  public void curvatureDrive(double xSpeed, double zRotation, boolean isQuickTurn){
+  public void curvatureDrive(double xSpeed, double zRotation){
     rightFront.setInverted(true);
     rightRear.setInverted(true);
-    robotDrive.curvatureDrive(xSpeed, zRotation, isQuickTurn);
+    robotDrive.curvatureDrive(xSpeed, zRotation, false);
   }
 
   /*
@@ -70,21 +68,20 @@ public class RobotDrivetrain {
   * 180 = down arrow (backward)
   * 270 = left arrow (left)
   * speeds can be adjusted
-  * first parameter is the forward/backward speed
   * Setting equal to 0 for left/right ensures it stays in place
   */
   public void dPadGetter(int dPad){
     if (dPad==0){
-      robotDrive.tankDrive(0.5, 0.5); //forward
+      robotDrive.tankDrive(0.3, 0.3); //forward
     }
     if (dPad==90){
-      robotDrive.tankDrive(0.5, -0.5); //right
+      robotDrive.tankDrive(0.3, -0.3); //right
     }
     if (dPad==180){
-      robotDrive.tankDrive(-0.5, -0.5); //reverse
+      robotDrive.tankDrive(-0.3, -0.3); //reverse
     }
     if (dPad==270){
-      robotDrive.tankDrive(-0.5, 0.5); //left
+      robotDrive.tankDrive(-0.3, 0.3); //left
     }
   }
   //This method should reset the built-in encoders on the SPARK MAX speed controllers to 0

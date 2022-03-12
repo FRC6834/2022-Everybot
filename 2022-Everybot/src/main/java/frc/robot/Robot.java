@@ -1,9 +1,10 @@
 /*
-*The purpose of this code is to design the base drivetrain code for The Bionic Warrios (6834)
+*The purpose of this code is to design the Everybot code for The Bionic Warriors (6834)
 *The current drivetrain design (2021-2022) is made up of four NEO brushless motors, two per side 
-*and four Spark MAX speed controllers.
-*This code contains functionality for tank drive AND curvature drive. To pick the desired drive,
-*comment out the code that should NOT be used. -EG 9/2/21
+*and four Spark MAX motor controllers
+*There are two additional brushed motors, both using Spark MAX motor controllers.
+*One of these motors controls the intake/shooting mechanism and the other controls the arm that
+*lifts the intake/shooter up and down.
 */
 
 package frc.robot;
@@ -12,7 +13,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser; //not sure what this is for - EG
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.XboxController; //improved functionality for xbox controller use
 import edu.wpi.first.util.sendable.SendableRegistry; //allows us to add info we select to dashboard
 
@@ -88,12 +88,11 @@ public class Robot extends TimedRobot {
     double fSpeed = controller0.getRightTriggerAxis(); //forward speed from right trigger
     double rSpeed = controller0.getLeftTriggerAxis(); //reverse speed from left trigger
     double turn = controller0.getLeftX(); //gets the direction from the left analog stick
-    boolean quickTurn = controller0.getLeftBumper(); //makes quick turn if left bumper is pressed
     if (fSpeed > 0){
-      drivetrain.curvatureDrive(fSpeed, turn, quickTurn); // if quickTurn doesn't work, change to false
+      drivetrain.curvatureDrive(fSpeed, turn); // if quickTurn doesn't work, change to false
     }
     else if (rSpeed > 0){
-      drivetrain.curvatureDrive(-1*rSpeed, turn, quickTurn);
+      drivetrain.curvatureDrive(-1*rSpeed, turn);
     }
         
     int dPad = controller0.getPOV(); //scans to see which directional arrow is being pushed
