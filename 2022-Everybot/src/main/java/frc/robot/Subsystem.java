@@ -8,8 +8,8 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class Subsystem {
     
     //Class Variables
-    private CANSparkMax everyBotIntakeMotor = new CANSparkMax(6, MotorType.kBrushed);
-    private CANSparkMax everyBotArmMotor = new CANSparkMax(7, MotorType.kBrushed);    
+    private CANSparkMax everyBotIntakeMotor = new CANSparkMax(9, MotorType.kBrushed);
+    private CANSparkMax everyBotArmMotor = new CANSparkMax(12, MotorType.kBrushed);    
     
     //Constructor will be called in Robot.java to create Subsystem object
     public Subsystem(){}
