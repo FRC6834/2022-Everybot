@@ -41,7 +41,7 @@ public class Robot extends TimedRobot {
     drivetrain.resetEncoders();
     CameraServer.startAutomaticCapture();
     everyBotArmMotor.setIdleMode(IdleMode.kBrake);
-    everyBotArmMotor.set(0.15);
+    everyBotArmMotor.set(0.09);
   }
 
   @Override
@@ -61,7 +61,8 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     //Should give the time since auto was initialized
-    startTime = Timer.getFPGATimestamp(); //used in auto periodic 
+    startTime = Timer.getFPGATimestamp(); //used in auto periodic
+    everyBotArmMotor.set(0.09);
   }
 
   @Override
@@ -70,7 +71,7 @@ public class Robot extends TimedRobot {
     double time  = Timer.getFPGATimestamp();
     //Not sure why time-startTime works the way it does -EG 9/2/21
 
-    everyBotArmMotor.set(0.15);
+    everyBotArmMotor.set(0.09);
     //Speeds go between 0 and 1
     //Set at 50% speed right now
     //Code has robot move forward for 1 second
@@ -85,6 +86,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     everyBotArmMotor.setIdleMode(IdleMode.kBrake);
+    everyBotArmMotor.set(0.09);
   }
   
   @Override
@@ -117,10 +119,10 @@ public class Robot extends TimedRobot {
     boolean armUp = controller0.getXButton();
     boolean armDown = controller0.getYButton();
     if(armUp){
-      everyBotArmMotor.set(0.15);
+      everyBotArmMotor.set(0.09);
     }
     if(armDown){
-      everyBotArmMotor.set(-0.1);
+      everyBotArmMotor.set(-0.05);
     }
 
     //Intake
@@ -141,11 +143,15 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when the robot is disabled. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    everyBotArmMotor.set(0.09);
+  }
 
   /** This function is called periodically when disabled. */
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    everyBotArmMotor.set(0.09);
+  }
 
   /** This function is called once when test mode is enabled. */
   @Override
