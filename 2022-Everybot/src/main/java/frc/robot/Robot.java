@@ -40,6 +40,8 @@ public class Robot extends TimedRobot {
     //Sets encoder positions to 0
     drivetrain.resetEncoders();
     CameraServer.startAutomaticCapture();
+    everyBotArmMotor.setIdleMode(IdleMode.kBrake);
+    everyBotArmMotor.set(0.15);
   }
 
   @Override
@@ -67,6 +69,8 @@ public class Robot extends TimedRobot {
     //Does this give the time since the robot was turned on or the time since auto was started??? - EG 9/2/21
     double time  = Timer.getFPGATimestamp();
     //Not sure why time-startTime works the way it does -EG 9/2/21
+
+    everyBotArmMotor.set(0.15);
     //Speeds go between 0 and 1
     //Set at 50% speed right now
     //Code has robot move forward for 1 second
@@ -99,31 +103,24 @@ public class Robot extends TimedRobot {
     double rSpeed = controller0.getLeftTriggerAxis(); //reverse speed from left trigger
     double turn = controller0.getLeftX(); //gets the direction from the left analog stick
     if (fSpeed > 0){
-      drivetrain.curvatureDrive(fSpeed*.8, turn); // if quickTurn doesn't work, change to false
+      drivetrain.curvatureDrive(fSpeed*.8, turn);
     }
     else if (rSpeed > 0){
       drivetrain.curvatureDrive(-1*rSpeed*.8, turn);
     }
-        
+    
+    //D-Pad controls for fine movements
     int dPad = controller0.getPOV(); //scans to see which directional arrow is being pushed
     drivetrain.dPadGetter(dPad);
 
     //Arm
     boolean armUp = controller0.getXButton();
     boolean armDown = controller0.getYButton();
-    boolean brake = controller0.getRightBumper();
-    //sub.everyBotArm(armUp, armDown);
     if(armUp){
       everyBotArmMotor.set(0.15);
     }
-    else if(armDown){
+    if(armDown){
       everyBotArmMotor.set(-0.1);
-    }
-    else if(brake){
-      everyBotArmMotor.setIdleMode(IdleMode.kBrake);
-    }
-    else{
-      everyBotArmMotor.set(0);
     }
 
     //Intake
@@ -138,9 +135,7 @@ public class Robot extends TimedRobot {
     }
     else{
       everyBotIntakeMotor.set(0);
-    }
-
-    
+    }    
   }
   
 
