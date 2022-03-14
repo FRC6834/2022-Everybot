@@ -75,11 +75,16 @@ public class Robot extends TimedRobot {
     //Speeds go between 0 and 1
     //Set at 50% speed right now
     //Code has robot move forward for 1 second
-    if (time - startTime < 1){
-      drivetrain.arcadeDrive(0.5, 0);
+    if (time - startTime < 4){
+      everyBotArmMotor.set(-0.05);
+    }
+    else if(time - startTime < 7){
+      drivetrain.curvatureDrive(0.3, 0);
+      everyBotIntakeMotor.set(-0.5);
+      everyBotArmMotor.set(-0.05);
     }
     else{
-      drivetrain.arcadeDrive(0, 0);
+      everyBotIntakeMotor.set(0);
     }
   }
 
