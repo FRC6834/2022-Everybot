@@ -43,7 +43,7 @@ public class Robot extends TimedRobot {
     drivetrain.resetEncoders();
     CameraServer.startAutomaticCapture();
     everyBotArmMotor.setIdleMode(IdleMode.kBrake);
-    everyBotArmMotor.set(0.09);
+    everyBotArmMotor.set(0.12);
   }
 
   @Override
@@ -64,38 +64,41 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     //Should give the time since auto was initialized
     startTime = Timer.getFPGATimestamp(); //used in auto periodic
-    everyBotArmMotor.set(0.09);
+    everyBotArmMotor.set(0.12);
   }
 
   @Override
   public void autonomousPeriodic() {    
     //Does this give the time since the robot was turned on or the time since auto was started??? - EG 9/2/21
     double time  = Timer.getFPGATimestamp();
-    //Not sure why time-startTime works the way it does -EG 9/2/21
-
-    everyBotArmMotor.set(0.09);
-    //Speeds go between 0 and 1
-    //Set at 50% speed right now
-    //Code has robot move forward for 1 second
+    
+    //First two seconds of auto
+    //Keeps arm raised and shoots preloaded cargo
     if (time - startTime < 2){
-      everyBotIntakeMotor.set(0.5);
+      everyBotArmMotor.set(.12);
+      everyBotIntakeMotor.set(1);
     }
+    //Sec 2-5
+    //Stops intake motor and reverses
     else if(time - startTime < 5){
       drivetrain.curvatureDrive(0.2, 0, -1);
       everyBotIntakeMotor.set(0);
-      everyBotArmMotor.set(0.05);
+      everyBotArmMotor.set(0.08);
     }
+    //Sec 5-6
+    //Turns around
+    else if(time - startTime <6){
+      drivetrain.curvatureDrive(0.2, 1, -1);
+    }
+    //End of auto mode
+    //Lowers arm
     else{
-      everyBotIntakeMotor.set(0);
-      everyBotArmMotor.set(-.09);
+      everyBotArmMotor.set(-.15);
     }
   }
 
   @Override
-  public void teleopInit() {
-    everyBotArmMotor.setIdleMode(IdleMode.kBrake);
-    everyBotArmMotor.set(0.09);
-  }
+  public void teleopInit() {}
   
   @Override
   public void teleopPeriodic() {
@@ -124,10 +127,10 @@ public class Robot extends TimedRobot {
     }
     
     if (fSpeed > 0){
-      drivetrain.curvatureDrive(fSpeed*.8, turn, invert);
+      drivetrain.curvatureDrive(fSpeed*.65, turn, invert);
     }
     else if (rSpeed > 0){
-      drivetrain.curvatureDrive(-1*rSpeed*.8, turn, invert);
+      drivetrain.curvatureDrive(-1*rSpeed*.65, turn, invert);
     }
     
     
@@ -139,7 +142,7 @@ public class Robot extends TimedRobot {
     boolean armUp = controller0.getXButton();
     boolean armDown = controller0.getYButton();
     if(armUp){
-      everyBotArmMotor.set(0.11);
+      everyBotArmMotor.set(0.12);
     }
     if(armDown){
       everyBotArmMotor.set(-0.15);
@@ -153,7 +156,7 @@ public class Robot extends TimedRobot {
       everyBotIntakeMotor.set(-0.5);
     }
     else if(intakeOut){
-      everyBotIntakeMotor.set(0.9);
+      everyBotIntakeMotor.set(1);
     }
     else{
       everyBotIntakeMotor.set(0);
@@ -163,15 +166,11 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when the robot is disabled. */
   @Override
-  public void disabledInit() {
-    everyBotArmMotor.set(0.09);
-  }
+  public void disabledInit() {}
 
   /** This function is called periodically when disabled. */
   @Override
-  public void disabledPeriodic() {
-    everyBotArmMotor.set(0.09);
-  }
+  public void disabledPeriodic() {}
 
   /** This function is called once when test mode is enabled. */
   @Override
