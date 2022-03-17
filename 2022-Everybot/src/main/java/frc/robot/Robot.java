@@ -34,7 +34,9 @@ public class Robot extends TimedRobot {
   //private Subsystem sub = new Subsystem();
   private CANSparkMax everyBotIntakeMotor = new CANSparkMax(9, MotorType.kBrushed);
   private CANSparkMax everyBotArmMotor = new CANSparkMax(12, MotorType.kBrushless); 
-   
+  private int invert = 1;
+  private int invertBuffer = 0;
+
   @Override
   public void robotInit() {    //This method only runs once when the code first starts
     //Sets encoder positions to 0
@@ -79,7 +81,7 @@ public class Robot extends TimedRobot {
       everyBotArmMotor.set(-0.05);
     }
     else if(time - startTime < 7){
-      drivetrain.curvatureDrive(0.3, 0);
+      drivetrain.curvatureDrive(0.3, 0, 1);
       everyBotIntakeMotor.set(-0.5);
       everyBotArmMotor.set(-0.05);
     }
@@ -109,12 +111,24 @@ public class Robot extends TimedRobot {
     double fSpeed = controller0.getRightTriggerAxis(); //forward speed from right trigger
     double rSpeed = controller0.getLeftTriggerAxis(); //reverse speed from left trigger
     double turn = controller0.getLeftX(); //gets the direction from the left analog stick
+    
+    if (controller0.getLeftBumper()&& invert == 1&& invertBuffer<1){
+      invert = -1;
+      invertBuffer = 20;
+    }else if(controller0.getLeftBumper()&&invertBuffer<1){
+      invert = 1;
+      invertBuffer = 20;
+    }else if(invertBuffer>=1){
+      invertBuffer--;
+    }
+    
     if (fSpeed > 0){
-      drivetrain.curvatureDrive(fSpeed*.8, turn);
+      drivetrain.curvatureDrive(fSpeed*.8, turn, invert);
     }
     else if (rSpeed > 0){
-      drivetrain.curvatureDrive(-1*rSpeed*.8, turn);
+      drivetrain.curvatureDrive(-1*rSpeed*.8, turn, invert);
     }
+    
     
     //D-Pad controls for fine movements
     int dPad = controller0.getPOV(); //scans to see which directional arrow is being pushed
@@ -124,10 +138,10 @@ public class Robot extends TimedRobot {
     boolean armUp = controller0.getXButton();
     boolean armDown = controller0.getYButton();
     if(armUp){
-      everyBotArmMotor.set(0.09);
+      everyBotArmMotor.set(0.11);
     }
     if(armDown){
-      everyBotArmMotor.set(-0.05);
+      everyBotArmMotor.set(-0.15);
     }
 
     //Intake

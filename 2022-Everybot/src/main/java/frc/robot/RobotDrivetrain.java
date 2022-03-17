@@ -55,10 +55,8 @@ public class RobotDrivetrain {
   //Right side motor controllers are inverted to ensure that both sides of the bot move in the same direction when desired
   //xSpeed (0 to 1.0) to go forward and (-1.0 to 0) to move backward
   //zRotation (-1.0 to 1.0) controls direction
-  public void curvatureDrive(double xSpeed, double zRotation){
-    rightFront.setInverted(true);
-    rightRear.setInverted(true);
-    robotDrive.curvatureDrive(xSpeed, zRotation, false);
+  public void curvatureDrive(double xSpeed, double zRotation, int invert){
+    robotDrive.curvatureDrive(invert*xSpeed, zRotation, false);
   }
 
   /*
@@ -84,6 +82,11 @@ public class RobotDrivetrain {
       robotDrive.tankDrive(-0.2, 0.2); //left
     }
   }
+
+
+
+ 
+  
   //This method should reset the built-in encoders on the SPARK MAX speed controllers to 0
   //Needs Tested
   //How can we utilize the encoders? What can they do? - EG 1.15.22
