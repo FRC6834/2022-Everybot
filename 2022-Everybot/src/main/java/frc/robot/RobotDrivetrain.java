@@ -42,12 +42,16 @@ public class RobotDrivetrain {
   //Values run from -1.0 to 1.0
   //Use a value of 0 if you want robot to be stationary in particular direction
   public void arcadeDrive(double xSpeed, double zRotation){
+    rightFront.setInverted(true);
+    rightRear.setInverted(true);
     robotDrive.arcadeDrive(xSpeed, zRotation);
   }
 
   //leftSpeed (-1.0 to 1.0) - comes from left stick
   //rightSpeed (-1.0 to 1.0) - comes from right stick
   public void tankDrive(double leftSpeed, double rightSpeed){
+    rightFront.setInverted(true);
+    rightRear.setInverted(true);
     robotDrive.tankDrive(leftSpeed, rightSpeed);
   }
 
@@ -56,6 +60,8 @@ public class RobotDrivetrain {
   //xSpeed (0 to 1.0) to go forward and (-1.0 to 0) to move backward
   //zRotation (-1.0 to 1.0) controls direction
   public void curvatureDrive(double xSpeed, double zRotation, int invert){
+    rightFront.setInverted(true);
+    rightRear.setInverted(true);
     robotDrive.curvatureDrive(invert*xSpeed, zRotation, false);
   }
 
