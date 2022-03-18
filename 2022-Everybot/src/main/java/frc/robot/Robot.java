@@ -147,6 +147,9 @@ public class Robot extends TimedRobot {
     if(armDown){
       everyBotArmMotor.set(-0.15);
     }
+    if(controller0.getRightBumper()){
+      everyBotArmMotor.set(0);
+    }
 
     //Intake
     boolean intakeIn = controller0.getAButton();
