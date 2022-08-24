@@ -43,7 +43,6 @@ public class Robot extends TimedRobot {
     drivetrain.resetEncoders();
     CameraServer.startAutomaticCapture();
     everyBotArmMotor.setIdleMode(IdleMode.kBrake);
-    everyBotArmMotor.set(0.12);
   }
 
   @Override
@@ -72,8 +71,12 @@ public class Robot extends TimedRobot {
     //Does this give the time since the robot was turned on or the time since auto was started??? - EG 9/2/21
     double time  = Timer.getFPGATimestamp();
     
+
+    /*if(time - startTime < 2){
+      drivetrain.curvatureDrive(.2, 0, -1);
+    }*/
     //First two seconds of auto
-    //Keeps arm raised and shoots preloaded cargo
+    //Keeps arm raised and shoots preloaded cargo  SAVE FOR POSSIBLE AUTO GAMES
     if (time - startTime < 2){
       everyBotArmMotor.set(.12);
       everyBotIntakeMotor.set(1);
@@ -88,12 +91,12 @@ public class Robot extends TimedRobot {
     //Sec 5-6
     //Turns around
     else if(time - startTime <6){
-      drivetrain.curvatureDrive(0.2, 1, -1);
+      drivetrain.curvatureDrive(0.2, -0.7, -1);
     }
     //End of auto mode
     //Lowers arm
     else{
-      everyBotArmMotor.set(-.15);
+      everyBotArmMotor.set(-.12);
     }
   }
 
@@ -127,10 +130,10 @@ public class Robot extends TimedRobot {
     }
     
     if (fSpeed > 0){
-      drivetrain.curvatureDrive(fSpeed*.65, turn, invert);
+      drivetrain.curvatureDrive(fSpeed*.6, turn, invert);
     }
     else if (rSpeed > 0){
-      drivetrain.curvatureDrive(-1*rSpeed*.65, turn, invert);
+      drivetrain.curvatureDrive(-1*rSpeed*.6, turn, invert);
     }
     
     
@@ -142,10 +145,10 @@ public class Robot extends TimedRobot {
     boolean armUp = controller0.getXButton();
     boolean armDown = controller0.getYButton();
     if(armUp){
-      everyBotArmMotor.set(0.12);
+      everyBotArmMotor.set(0.15);
     }
     if(armDown){
-      everyBotArmMotor.set(-0.15);
+      everyBotArmMotor.set(-.12);
     }
     if(controller0.getRightBumper()){
       everyBotArmMotor.set(0);
