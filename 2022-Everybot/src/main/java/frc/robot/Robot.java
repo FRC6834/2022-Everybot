@@ -20,44 +20,30 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.cameraserver.CameraServer;
 
-
-
-public class Robot extends TimedRobot { 
-  
+public class Robot extends TimedRobot {   
   //Initializations
   private double startTime; // used for timer in autonomous mode find in autoInit
   //Conroller0 controls entire Everybot - drivetrain and subsystems
   private XboxController controller0 = new XboxController(0); //0 refers to USB port # - left side
   //The drivetrain object and dot operators will be called upon when accessing RobotDrivetrain methods
   private RobotDrivetrain drivetrain = new RobotDrivetrain();
-  //The sub object and dot operators will be called upon when accessing Subsystem methods
-  //private Subsystem sub = new Subsystem();
+  //Motors that control the arm lift and intake roller
   private CANSparkMax everyBotIntakeMotor = new CANSparkMax(9, MotorType.kBrushed);
-  private CANSparkMax everyBotArmMotor = new CANSparkMax(12, MotorType.kBrushless); 
-  private int invert = 1;
-  private int invertBuffer = 0;
+  private CANSparkMax everyBotArmMotor = new CANSparkMax(12, MotorType.kBrushless);
+  //Motors that control the climbers will work in unison
+  private CANSparkMax climber1 = new CANSparkMax(5, MotorType.kBrushed);
+  private CANSparkMax climber2 = new CANSparkMax(6, MotorType.kBrushed);
 
   @Override
   public void robotInit() {    //This method only runs once when the code first starts
     //Sets encoder positions to 0
-    drivetrain.resetEncoders();
     CameraServer.startAutomaticCapture();
     everyBotArmMotor.setIdleMode(IdleMode.kBrake);
+    //What motors need inverted? Climber? Arm? Intake? Goes here.
   }
 
   @Override
-  public void robotPeriodic() {    
-    /*
-    //Where should this go?
-    //Should put encoder position values on shuffleboard - EG    
-    SmartDashboard.putNumber("Front Left Encoder", leftFront.getEncoder().getPosition());
-    SmartDashboard.putNumber("Front Right Encoder", rightFront.getEncoder().getPosition());
-    SmartDashboard.putNumber("Rear Left Encoder", leftRear.getEncoder().getPosition());
-    SmartDashboard.putNumber("Rear Right Encoder", rightRear.getEncoder().getPosition());
-    //Can add in intakes, pneumatics and other objects as needed. Follow format.
-    SendableRegistry.add(robotDrive, "drive"); 
-    */
-  }
+  public void robotPeriodic() {}
   
   @Override
   public void autonomousInit() {
@@ -70,11 +56,6 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {    
     //Does this give the time since the robot was turned on or the time since auto was started??? - EG 9/2/21
     double time  = Timer.getFPGATimestamp();
-    
-
-    /*if(time - startTime < 2){
-      drivetrain.curvatureDrive(.2, 0, -1);
-    }*/
     //First two seconds of auto
     //Keeps arm raised and shoots preloaded cargo  SAVE FOR POSSIBLE AUTO GAMES
     if (time - startTime < 2){
@@ -84,14 +65,14 @@ public class Robot extends TimedRobot {
     //Sec 2-5
     //Stops intake motor and reverses
     else if(time - startTime < 5){
-      drivetrain.curvatureDrive(0.2, 0, -1);
+      drivetrain.curvatureDrive(0.2, 0);
       everyBotIntakeMotor.set(0);
       everyBotArmMotor.set(0.08);
     }
     //Sec 5-6
     //Turns around
     else if(time - startTime <6){
-      drivetrain.curvatureDrive(0.2, -0.7, -1);
+      drivetrain.curvatureDrive(0.2, -0.7);
     }
     //End of auto mode
     //Lowers arm
@@ -105,9 +86,8 @@ public class Robot extends TimedRobot {
   
   @Override
   public void teleopPeriodic() {
-    //Comment out the code that you don't want to use - pick tankDrive or curvatureDrive
     //D-pad functionality works regardless of drive type chosen
-
+    
     //Tank Drive
     //Need y-axis for each stick
     //Hand.kLeft gives the left analog stick and Hand.kRight gives the right analog stick
@@ -119,29 +99,23 @@ public class Robot extends TimedRobot {
     double rSpeed = controller0.getLeftTriggerAxis(); //reverse speed from left trigger
     double turn = controller0.getLeftX(); //gets the direction from the left analog stick
     
-    if (controller0.getLeftBumper()&& invert == 1&& invertBuffer<1){
-      invert = -1;
-      invertBuffer = 20;
-    }else if(controller0.getLeftBumper()&&invertBuffer<1){
-      invert = 1;
-      invertBuffer = 20;
-    }else if(invertBuffer>=1){
-      invertBuffer--;
-    }
-    
     if (fSpeed > 0){
-      drivetrain.curvatureDrive(fSpeed*.6, turn, invert);
+      drivetrain.curvatureDrive(fSpeed*.6, turn);
     }
     else if (rSpeed > 0){
-      drivetrain.curvatureDrive(-1*rSpeed*.6, turn, invert);
+      drivetrain.curvatureDrive(-1*rSpeed*.6, turn);
     }
-    
+    else{
+      drivetrain.curvatureDrive(0,0);
+    }    
     
     //D-Pad controls for fine movements
     int dPad = controller0.getPOV(); //scans to see which directional arrow is being pushed
     drivetrain.dPadGetter(dPad);
 
     //Arm
+    //X makes arm go up
+    //Y makes arm go down
     boolean armUp = controller0.getXButton();
     boolean armDown = controller0.getYButton();
     if(armUp){
@@ -150,14 +124,13 @@ public class Robot extends TimedRobot {
     if(armDown){
       everyBotArmMotor.set(-.12);
     }
-    if(controller0.getRightBumper()){
-      everyBotArmMotor.set(0);
-    }
 
     //Intake
+    //A takes cargo in
+    //B shoots cargo out
     boolean intakeIn = controller0.getAButton();
     boolean intakeOut = controller0.getBButton();
-    //sub.everyBotArm(intakeIn, intakeOut);
+
     if(intakeIn){
       everyBotIntakeMotor.set(-0.5);
     }
@@ -166,9 +139,27 @@ public class Robot extends TimedRobot {
     }
     else{
       everyBotIntakeMotor.set(0);
-    }    
-  }
-  
+    }
+    
+    //Climber
+    //Right Bumper Raises climber
+    //Left Bumpter Lowers Climber
+    boolean climbUp = controller0.getRightBumper();
+    boolean climbDown = controller0.getLeftBumper();
+
+    if(climbUp){
+      climber1.set(.5);
+      climber2.set(.5);
+    }
+    else if(climbDown){
+      climber1.set(-.5);
+      climber2.set(-.5);
+    }
+    else{
+      climber1.set(0);
+      climber2.set(0);
+    }
+  }  
 
   /** This function is called once when the robot is disabled. */
   @Override

@@ -34,24 +34,22 @@ public class RobotDrivetrain {
   private DifferentialDrive robotDrive = new DifferentialDrive(driveLeft, driveRight);
 
   //Constructor is called in Robot.java to create RobotDrivetrain objects.
-  public RobotDrivetrain(){} //constructor
+  //Nothing needs to happen in the constructor for our purposes
+  public RobotDrivetrain(){}
   
-  //Method for arcade drive - used in Dpad controls and autonomous mode
+  //Not currently being used
   //xSpeed gives the forward/backward
   //zRotation gives the left/right
   //Values run from -1.0 to 1.0
   //Use a value of 0 if you want robot to be stationary in particular direction
   public void arcadeDrive(double xSpeed, double zRotation){
-    rightFront.setInverted(true);
-    rightRear.setInverted(true);
     robotDrive.arcadeDrive(xSpeed, zRotation);
   }
 
+  //used in Dpad controls and autonomous mode
   //leftSpeed (-1.0 to 1.0) - comes from left stick
   //rightSpeed (-1.0 to 1.0) - comes from right stick
   public void tankDrive(double leftSpeed, double rightSpeed){
-    rightFront.setInverted(true);
-    rightRear.setInverted(true);
     robotDrive.tankDrive(leftSpeed, rightSpeed);
   }
 
@@ -59,10 +57,8 @@ public class RobotDrivetrain {
   //Right side motor controllers are inverted to ensure that both sides of the bot move in the same direction when desired
   //xSpeed (0 to 1.0) to go forward and (-1.0 to 0) to move backward
   //zRotation (-1.0 to 1.0) controls direction
-  public void curvatureDrive(double xSpeed, double zRotation, int invert){
-    rightFront.setInverted(true);
-    rightRear.setInverted(true);
-    robotDrive.curvatureDrive(invert*xSpeed, zRotation, false);
+  public void curvatureDrive(double xSpeed, double zRotation){
+    robotDrive.curvatureDrive(xSpeed, zRotation, false);
   }
 
   /*
@@ -74,6 +70,7 @@ public class RobotDrivetrain {
   * speeds can be adjusted
   * Setting equal to 0 for left/right ensures it stays in place
   */
+
   public void dPadGetter(int dPad){
     if (dPad==0){
       robotDrive.tankDrive(0.2, 0.2); //forward
@@ -87,19 +84,5 @@ public class RobotDrivetrain {
     if (dPad==270){
       robotDrive.tankDrive(-0.2, 0.2); //left
     }
-  }
-
-
-
- 
-  
-  //This method should reset the built-in encoders on the SPARK MAX speed controllers to 0
-  //Needs Tested
-  //How can we utilize the encoders? What can they do? - EG 1.15.22
-  public void resetEncoders(){
-    leftFront.getEncoder().setPosition(0);
-    leftRear.getEncoder().setPosition(0);
-    rightFront.getEncoder().setPosition(0);
-    rightRear.getEncoder().setPosition(0); 
-  }
+  } 
 }
