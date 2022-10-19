@@ -58,6 +58,8 @@ public class RobotDrivetrain {
   //xSpeed (0 to 1.0) to go forward and (-1.0 to 0) to move backward
   //zRotation (-1.0 to 1.0) controls direction
   public void curvatureDrive(double xSpeed, double zRotation){
+    rightFront.setInverted(true);
+    rightRear.setInverted(true);
     robotDrive.curvatureDrive(xSpeed, zRotation, false);
   }
 
@@ -72,6 +74,8 @@ public class RobotDrivetrain {
   */
 
   public void dPadGetter(int dPad){
+    rightFront.setInverted(true);
+    rightRear.setInverted(true);
     if (dPad==0){
       robotDrive.tankDrive(0.2, 0.2); //forward
     }

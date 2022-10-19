@@ -28,17 +28,17 @@ public class Robot extends TimedRobot {
   //The drivetrain object and dot operators will be called upon when accessing RobotDrivetrain methods
   private RobotDrivetrain drivetrain = new RobotDrivetrain();
   //Motors that control the arm lift and intake roller
-  private CANSparkMax everyBotIntakeMotor = new CANSparkMax(9, MotorType.kBrushed);
-  private CANSparkMax everyBotArmMotor = new CANSparkMax(12, MotorType.kBrushless);
+  //private CANSparkMax everyBotIntakeMotor = new CANSparkMax(9, MotorType.kBrushed);
+  //private CANSparkMax everyBotArmMotor = new CANSparkMax(12, MotorType.kBrushless);
   //Motors that control the climbers will work in unison
-  private CANSparkMax climber1 = new CANSparkMax(5, MotorType.kBrushed);
-  private CANSparkMax climber2 = new CANSparkMax(6, MotorType.kBrushed);
+  private CANSparkMax climber1 = new CANSparkMax(5, MotorType.kBrushless);
+  private CANSparkMax climber2 = new CANSparkMax(12, MotorType.kBrushless);//left side
 
   @Override
   public void robotInit() {    //This method only runs once when the code first starts
     //Sets encoder positions to 0
     CameraServer.startAutomaticCapture();
-    everyBotArmMotor.setIdleMode(IdleMode.kBrake);
+    //everyBotArmMotor.setIdleMode(IdleMode.kBrake);
     //What motors need inverted? Climber? Arm? Intake? Goes here.
   }
 
@@ -49,7 +49,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     //Should give the time since auto was initialized
     startTime = Timer.getFPGATimestamp(); //used in auto periodic
-    everyBotArmMotor.set(0.12);
+    //everyBotArmMotor.set(0.12);
   }
 
   @Override
@@ -58,6 +58,7 @@ public class Robot extends TimedRobot {
     double time  = Timer.getFPGATimestamp();
     //First two seconds of auto
     //Keeps arm raised and shoots preloaded cargo  SAVE FOR POSSIBLE AUTO GAMES
+    /*
     if (time - startTime < 2){
       everyBotArmMotor.set(.12);
       everyBotIntakeMotor.set(1);
@@ -79,6 +80,7 @@ public class Robot extends TimedRobot {
     else{
       everyBotArmMotor.set(-.12);
     }
+    */
   }
 
   @Override
@@ -113,6 +115,7 @@ public class Robot extends TimedRobot {
     int dPad = controller0.getPOV(); //scans to see which directional arrow is being pushed
     drivetrain.dPadGetter(dPad);
 
+    /*
     //Arm
     //X makes arm go up
     //Y makes arm go down
@@ -140,7 +143,7 @@ public class Robot extends TimedRobot {
     else{
       everyBotIntakeMotor.set(0);
     }
-    
+    */
     //Climber
     //Right Bumper Raises climber
     //Left Bumpter Lowers Climber
