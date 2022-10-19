@@ -1,25 +1,20 @@
-/*
-*The purpose of this code is to design the Everybot code for The Bionic Warriors (6834)
-*The current drivetrain design (2021-2022) is made up of four NEO brushless motors, two per side 
-*and four Spark MAX motor controllers
-*There are two additional brushed motors, both using Spark MAX motor controllers.
-*One of these motors controls the intake/shooting mechanism and the other controls the arm that
-*lifts the intake/shooter up and down.
-*/
-
+//************************The purpose of this code is to design the Everybot code for The Bionic Warriors (6834)******************************
+// Compare to official Everybot Code https://gitlab.com/robonautseverybot/everybot-2022/-/blob/main/src/main/java/frc/robot/Robot.java
 package frc.robot;
 
-//Imports
+//*************************** Imports *************************************************
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser; //not sure what this is for - EG
 import edu.wpi.first.wpilibj.XboxController; //improved functionality for xbox controller use
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.util.sendable.SendableRegistry; //allows us to add info we select to dashboard
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.cameraserver.CameraServer;
 
+//************************ CLASS ********************************************************
 public class Robot extends TimedRobot {   
   //Initializations
   private double startTime; // used for timer in autonomous mode find in autoInit
@@ -28,17 +23,17 @@ public class Robot extends TimedRobot {
   //The drivetrain object and dot operators will be called upon when accessing RobotDrivetrain methods
   private RobotDrivetrain drivetrain = new RobotDrivetrain();
   //Motors that control the arm lift and intake roller
-  //private CANSparkMax everyBotIntakeMotor = new CANSparkMax(9, MotorType.kBrushed);
-  //private CANSparkMax everyBotArmMotor = new CANSparkMax(12, MotorType.kBrushless);
+  private CANSparkMax intake = new CANSparkMax(7, MotorType.kBrushed);
+  private CANSparkMax arm = new CANSparkMax(8, MotorType.kBrushless);
   //Motors that control the climbers will work in unison
-  private CANSparkMax climber1 = new CANSparkMax(5, MotorType.kBrushless);
-  private CANSparkMax climber2 = new CANSparkMax(12, MotorType.kBrushless);//left side
+  private CANSparkMax climber1 = new CANSparkMax(5, MotorType.kBrushless);//right side
+  private CANSparkMax climber2 = new CANSparkMax(6, MotorType.kBrushless);//left side
+  private MotorControllerGroup climb = new MotorControllerGroup(climber1, climber2);
 
   @Override
   public void robotInit() {    //This method only runs once when the code first starts
-    //Sets encoder positions to 0
     CameraServer.startAutomaticCapture();
-    //everyBotArmMotor.setIdleMode(IdleMode.kBrake);
+    arm.setIdleMode(IdleMode.kBrake);
     //What motors need inverted? Climber? Arm? Intake? Goes here.
   }
 
@@ -47,8 +42,8 @@ public class Robot extends TimedRobot {
   
   @Override
   public void autonomousInit() {
-    //Should give the time since auto was initialized
-    startTime = Timer.getFPGATimestamp(); //used in auto periodic
+    //Should give the time since auto was initialized - used in auto periodic
+    startTime = Timer.getFPGATimestamp();
     //everyBotArmMotor.set(0.12);
   }
 
@@ -58,17 +53,16 @@ public class Robot extends TimedRobot {
     double time  = Timer.getFPGATimestamp();
     //First two seconds of auto
     //Keeps arm raised and shoots preloaded cargo  SAVE FOR POSSIBLE AUTO GAMES
-    /*
     if (time - startTime < 2){
-      everyBotArmMotor.set(.12);
-      everyBotIntakeMotor.set(1);
+      arm.set(.12);
+      intake.set(1);
     }
     //Sec 2-5
     //Stops intake motor and reverses
     else if(time - startTime < 5){
       drivetrain.curvatureDrive(0.2, 0);
-      everyBotIntakeMotor.set(0);
-      everyBotArmMotor.set(0.08);
+      intake.set(0);
+      arm.set(0.08);
     }
     //Sec 5-6
     //Turns around
@@ -78,9 +72,8 @@ public class Robot extends TimedRobot {
     //End of auto mode
     //Lowers arm
     else{
-      everyBotArmMotor.set(-.12);
+      arm.set(-.12);
     }
-    */
   }
 
   @Override
@@ -115,17 +108,16 @@ public class Robot extends TimedRobot {
     int dPad = controller0.getPOV(); //scans to see which directional arrow is being pushed
     drivetrain.dPadGetter(dPad);
 
-    /*
     //Arm
     //X makes arm go up
     //Y makes arm go down
     boolean armUp = controller0.getXButton();
     boolean armDown = controller0.getYButton();
     if(armUp){
-      everyBotArmMotor.set(0.15);
+      arm.set(0.15);
     }
     if(armDown){
-      everyBotArmMotor.set(-.12);
+      arm.set(-.12);
     }
 
     //Intake
@@ -135,15 +127,15 @@ public class Robot extends TimedRobot {
     boolean intakeOut = controller0.getBButton();
 
     if(intakeIn){
-      everyBotIntakeMotor.set(-0.5);
+      intake.set(-0.5);
     }
     else if(intakeOut){
-      everyBotIntakeMotor.set(1);
+      intake.set(1);
     }
     else{
-      everyBotIntakeMotor.set(0);
+      intake.set(0);
     }
-    */
+
     //Climber
     //Right Bumper Raises climber
     //Left Bumpter Lowers Climber
@@ -151,16 +143,13 @@ public class Robot extends TimedRobot {
     boolean climbDown = controller0.getLeftBumper();
 
     if(climbUp){
-      climber1.set(.5);
-      climber2.set(.5);
+      climb.set(0.5);
     }
     else if(climbDown){
-      climber1.set(-.5);
-      climber2.set(-.5);
+      climb.set(-0.5);
     }
     else{
-      climber1.set(0);
-      climber2.set(0);
+      climb.set(0);
     }
   }  
 
