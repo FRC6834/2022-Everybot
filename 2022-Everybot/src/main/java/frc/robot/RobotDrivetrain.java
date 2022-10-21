@@ -1,9 +1,8 @@
 package frc.robot;
 
-//Imports needed for curvature, arcade, and tank drive
+//Imports
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
-
 /*Must install rev robotics library in order to use SPARK Max speed controllers. 
  *Follow directions on site below.
  *https://docs.revrobotics.com/sparkmax/software-resources/spark-max-api-information#java-api
@@ -12,17 +11,16 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+
 //The goal of this class is to create methods that can be used to operate the robot's drivetrain.
 //This will clean up the code in Robot.java and will allow for easier future fixes.
 public class RobotDrivetrain {
   
-  //*************************Variable initialization + assignment ****************************************
-
   //Creates SPARK MAX objects for each speed controller in the drivetrain.
-  //Orientation assumes killswitch is at back of robot
+  //Orientation assumes killswitch is at front of robot
   //The first parameter refers to the CAN ID - Use Rev Tool to determine CAN IDs
   //MotorType.kBrushless MUST be used when using NEO brushless motors
-  //Use REV Tool to ensure motor controllers are flashed for brushless or brushed when appropriate
+  //Use REV Tool to ensure motor controllers are flashed for brushless
   private CANSparkMax leftFront = new CANSparkMax(2, MotorType.kBrushless);
   private CANSparkMax leftRear = new CANSparkMax(1, MotorType.kBrushless);
   private CANSparkMax rightFront = new CANSparkMax(4, MotorType.kBrushless);
@@ -32,17 +30,14 @@ public class RobotDrivetrain {
   //This is cleaner than setting up two different differential drives
   private MotorControllerGroup driveLeft = new MotorControllerGroup(leftFront, leftRear);
   private MotorControllerGroup  driveRight = new MotorControllerGroup(rightFront, rightRear);
+  //The DifferentialDrive class gives us access to the arcade drive, tank drive, and curvature drive methods.
   private DifferentialDrive robotDrive = new DifferentialDrive(driveLeft, driveRight);
 
   //Constructor is called in Robot.java to create RobotDrivetrain objects.
   //Nothing needs to happen in the constructor for our purposes
-  public RobotDrivetrain(){
-    //Right side motors need inverted to rotate in correct direction in unison with left side
-    rightFront.setInverted(true);
-    rightRear.setInverted(true);
-  }
+  public RobotDrivetrain(){}
   
-  //Not currently being used in Robot.java
+  //Not currently being used
   //xSpeed gives the forward/backward
   //zRotation gives the left/right
   //Values run from -1.0 to 1.0
@@ -63,6 +58,8 @@ public class RobotDrivetrain {
   //xSpeed (0 to 1.0) to go forward and (-1.0 to 0) to move backward
   //zRotation (-1.0 to 1.0) controls direction
   public void curvatureDrive(double xSpeed, double zRotation){
+    rightFront.setInverted(true);
+    rightRear.setInverted(true);
     robotDrive.curvatureDrive(xSpeed, zRotation, false);
   }
 
