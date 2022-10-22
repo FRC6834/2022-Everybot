@@ -28,17 +28,17 @@ public class Robot extends TimedRobot {
   //The drivetrain object and dot operators will be called upon when accessing RobotDrivetrain methods
   private RobotDrivetrain drivetrain = new RobotDrivetrain();
   //Motors that control the arm lift and intake roller
-  //private CANSparkMax everyBotIntakeMotor = new CANSparkMax(9, MotorType.kBrushed);
-  //private CANSparkMax everyBotArmMotor = new CANSparkMax(12, MotorType.kBrushless);
+  private CANSparkMax everyBotIntakeMotor = new CANSparkMax(8, MotorType.kBrushed);
+  private CANSparkMax everyBotArmMotor = new CANSparkMax(9, MotorType.kBrushless);
   //Motors that control the climbers will work in unison
-  private CANSparkMax climber1 = new CANSparkMax(5, MotorType.kBrushless);
-  private CANSparkMax climber2 = new CANSparkMax(12, MotorType.kBrushless);//left side
+  private CANSparkMax climber1 = new CANSparkMax(7, MotorType.kBrushless);
+  private CANSparkMax climber2 = new CANSparkMax(6, MotorType.kBrushless);//left side
 
   @Override
   public void robotInit() {    //This method only runs once when the code first starts
     //Sets encoder positions to 0
     CameraServer.startAutomaticCapture();
-    //everyBotArmMotor.setIdleMode(IdleMode.kBrake);
+    everyBotArmMotor.setIdleMode(IdleMode.kBrake);
     //What motors need inverted? Climber? Arm? Intake? Goes here.
   }
 
@@ -102,10 +102,10 @@ public class Robot extends TimedRobot {
     double turn = controller0.getLeftX(); //gets the direction from the left analog stick
     
     if (fSpeed > 0){
-      drivetrain.curvatureDrive(fSpeed*.6, turn);
+      drivetrain.curvatureDrive(fSpeed, turn);
     }
     else if (rSpeed > 0){
-      drivetrain.curvatureDrive(-1*rSpeed*.6, turn);
+      drivetrain.curvatureDrive(-1*rSpeed, turn);
     }
     else{
       drivetrain.curvatureDrive(0,0);
@@ -115,18 +115,22 @@ public class Robot extends TimedRobot {
     int dPad = controller0.getPOV(); //scans to see which directional arrow is being pushed
     drivetrain.dPadGetter(dPad);
 
-    /*
+    
     //Arm
     //X makes arm go up
     //Y makes arm go down
     boolean armUp = controller0.getXButton();
     boolean armDown = controller0.getYButton();
     if(armUp){
-      everyBotArmMotor.set(0.15);
+      everyBotArmMotor.set(0.25);
     }
-    if(armDown){
+    else if(armDown){
       everyBotArmMotor.set(-.12);
     }
+    else{
+      everyBotArmMotor.set(0);
+    }
+    
 
     //Intake
     //A takes cargo in
@@ -143,25 +147,36 @@ public class Robot extends TimedRobot {
     else{
       everyBotIntakeMotor.set(0);
     }
-    */
+    
+
+    
     //Climber
     //Right Bumper Raises climber
     //Left Bumpter Lowers Climber
-    boolean climbUp = controller0.getRightBumper();
-    boolean climbDown = controller0.getLeftBumper();
+    boolean climbRight = controller0.getRightBumper();
+    boolean climbLeft = controller0.getLeftBumper();
+    boolean up = controller0.getRightStickButton();
+    boolean down = controller0.getLeftStickButton();
 
-    if(climbUp){
-      climber1.set(.5);
-      climber2.set(.5);
+    if(up){
+      climber1.set(-.75);
+      climber2.set(-.75);
     }
-    else if(climbDown){
-      climber1.set(-.5);
-      climber2.set(-.5);
+    else if(down){
+      climber1.set(.75);
+      climber2.set(.75);
+    }
+    else if(climbRight){
+      climber2.set(.75);
+    }
+    else if(climbLeft){
+      climber1.set(.75);
     }
     else{
       climber1.set(0);
       climber2.set(0);
     }
+    
   }  
 
   /** This function is called once when the robot is disabled. */

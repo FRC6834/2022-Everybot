@@ -35,7 +35,10 @@ public class RobotDrivetrain {
 
   //Constructor is called in Robot.java to create RobotDrivetrain objects.
   //Nothing needs to happen in the constructor for our purposes
-  public RobotDrivetrain(){}
+  public RobotDrivetrain(){
+    rightFront.setInverted(true);
+    rightRear.setInverted(true);
+  }
   
   //Not currently being used
   //xSpeed gives the forward/backward
