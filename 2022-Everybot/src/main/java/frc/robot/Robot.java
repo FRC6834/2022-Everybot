@@ -58,29 +58,25 @@ public class Robot extends TimedRobot {
     double time  = Timer.getFPGATimestamp();
     //First two seconds of auto
     //Keeps arm raised and shoots preloaded cargo  SAVE FOR POSSIBLE AUTO GAMES
-    /*
     if (time - startTime < 2){
-      everyBotArmMotor.set(.12);
       everyBotIntakeMotor.set(1);
     }
     //Sec 2-5
     //Stops intake motor and reverses
     else if(time - startTime < 5){
-      drivetrain.curvatureDrive(0.2, 0);
+      drivetrain.curvatureDrive(-0.15, 0);
       everyBotIntakeMotor.set(0);
-      everyBotArmMotor.set(0.08);
     }
     //Sec 5-6
     //Turns around
     else if(time - startTime <6){
-      drivetrain.curvatureDrive(0.2, -0.7);
+      drivetrain.curvatureDrive(-.15, -1);
     }
     //End of auto mode
     //Lowers arm
     else{
       everyBotArmMotor.set(-.12);
     }
-    */
   }
 
   @Override
